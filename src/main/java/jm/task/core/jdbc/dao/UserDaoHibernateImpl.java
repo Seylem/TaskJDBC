@@ -1,7 +1,6 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
-import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -49,9 +48,12 @@ public class UserDaoHibernateImpl implements UserDao {
     public void removeUserById(long id) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.createNativeQuery("DELETE FROM users WHERE id = :id")
-                .setParameter("id", id)
-                .executeUpdate();
+//        //Вариант не через чистый Hibernate
+//        session.createNativeQuery("DELETE FROM users WHERE id = :id")
+//                .setParameter("id", id)
+//                .executeUpdate();
+        User user = session.load(User.class, id);
+        session.delete(user);
         transaction.commit();
         session.close();
     }
